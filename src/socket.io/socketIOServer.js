@@ -26,7 +26,6 @@ function configureSocketIO(server) {
       // Procesar mensajes de Socket.IO
       signale.info(`Mensaje recibido desde Socket.IO: ${JSON.stringify(message)}`);
   
-      // Reenviar el mensaje a todos los clientes en la sala
       io.to(message.room).emit('message', message);
     });
   
