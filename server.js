@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const signale = require('signale');
-const cors = require('cors'); 
+const cors = require('cors');
 
 const { configureWebSocket } = require('./src/websocket/websocketServer');
 const { configureSocketIO } = require('./src/socket.io/socketIOServer');
@@ -10,13 +10,13 @@ const app = express();
 const server = http.createServer(app);
 
 const corsOptions = {
-  origin: 'http://localhost:3000',  
+  origin: 'http://localhost:3000',
   methods: ['GET', 'POST'],
   credentials: true,
 };
 
 app.use(express.json());
-app.use(cors(corsOptions)); 
+app.use(cors(corsOptions));
 
 const wss = configureWebSocket(server, '/api/chat');
 
@@ -82,6 +82,16 @@ app.get('/api/messages', (req, res) => {
   } else {
     res.status(404).json({ messages: [] });
   }
+});
+
+app.get('/api/whisper-messages', (req, res) => {
+  const { username } = req.query;
+  const userMessages = messages
+    .filter((message) => message.username === username)
+    .map((message) => message.messages)
+    .flat();
+
+  res.status(200).json({ messages: userMessages });
 });
 
 const PORT = 8080;

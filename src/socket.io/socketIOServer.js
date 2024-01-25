@@ -23,7 +23,6 @@ function configureSocketIO(server) {
     });
   
     socket.on('message', (message) => {
-      // Procesar mensajes de Socket.IO
       signale.info(`Mensaje recibido desde Socket.IO: ${JSON.stringify(message)}`);
   
       io.to(message.room).emit('message', message);
@@ -32,7 +31,6 @@ function configureSocketIO(server) {
     socket.on('disconnect', () => {
       signale.error('Cliente de Socket.IO desconectado');
   
-      // Dejar la sala antes de desconectar
       const rooms = Object.keys(socket.rooms);
       rooms.forEach((room) => {
         if (room !== socket.id) {
