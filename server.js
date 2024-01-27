@@ -32,9 +32,15 @@ app.use('/api/rooms', (req, res) => {
 
 // LONG POLLING
 const connectionsRequests = [];
+let hayNuevasConexiones = false;
 
 app.get('/api/connections', (req, res) => {
-  connectionsRequests.push(res);
+  if (hayNuevasConexiones) {
+    res.json({ connections: wss.clients.size });
+    hayNuevasConexiones = false; 
+  } else {
+    connectionsRequests.push(res);
+  }
 });
 
 function notifyConnections() {
@@ -48,8 +54,11 @@ function notifyConnections() {
   setTimeout(notifyConnections, 1000);
 }
 
-notifyConnections();
+setInterval(() => {
+  hayNuevasConexiones = true;
+}, 5000);
 
+notifyConnections();
 
 let messages = [];
 
